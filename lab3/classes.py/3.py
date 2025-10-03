@@ -3,7 +3,6 @@ class Shape: #родительский класс
         print(0) # по умолчанию возвращает 0,(shape) может быть разной (круг,прямоугольник)
 class Rectangle(Shape): #дочерный класс
     def __init__(self, length, width):
-        super().__init__()
         self.length=length
         self.width=width
         
