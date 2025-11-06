@@ -27,12 +27,14 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     return
                 
+                
                 if event.key == pygame.K_r:
                     mode = 'red'
                 elif event.key == pygame.K_g:
                     mode = 'green'
                 elif event.key == pygame.K_b:
                     mode = 'blue'
+                
                 
                 elif event.key == pygame.K_c:
                     tool = 'circle'
@@ -42,6 +44,8 @@ def main():
                     tool = 'eraser'
                 elif event.key == pygame.K_p:
                     tool = 'brush'
+                elif event.key == pygame.K_t:
+                    tool = 'rectangle'  
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
@@ -90,12 +94,15 @@ def drawLineBetween(screen, index, start, end, width, color_mode, tool):
         x = int(aprogress * start[0] + progress * end[0])
         y = int(aprogress * start[1] + progress * end[1])
 
+       
         if tool == 'brush':
             pygame.draw.circle(screen, color, (x, y), width)
         elif tool == 'circle':
             pygame.draw.circle(screen, color, (x, y), width, 2)
         elif tool == 'square':
             pygame.draw.rect(screen, color, (x - width, y - width, width * 2, width * 2))
+        elif tool == 'rectangle':  
+            pygame.draw.rect(screen, color, (x - width*2, y - width, width*4, width*2), 2)
         elif tool == 'eraser':
             pygame.draw.circle(screen, (0, 0, 0), (x, y), width)
 

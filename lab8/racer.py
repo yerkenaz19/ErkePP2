@@ -22,7 +22,7 @@ SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
 SPEED = 5
 SCORE = 0
-COINS_COLLECTED = 0  # Жиналған монеталар саны
+coinss = 0  
  
 #Setting up Fonts
 font = pygame.font.SysFont("Verdana", 60)
@@ -78,7 +78,7 @@ class Player(pygame.sprite.Sprite):
 class Coin(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("coin.png")  # Монета суреті
+        self.image = pygame.image.load("coin.png")  
         self.image = pygame.transform.scale(self.image, (40, 40))
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(40, SCREEN_WIDTH-40), 0)
@@ -124,21 +124,21 @@ while True:
     DISPLAYSURF.blit(background, (0,0))
     scores = font_small.render(str(SCORE), True, BLACK)
     DISPLAYSURF.blit(scores, (10,10))
-    coin_text = font_small.render(f"Coins: {COINS_COLLECTED}", True, BLACK)
-    DISPLAYSURF.blit(coin_text, (450,10))
+    text = font_small.render("Coins: " + str(coinss), True, BLACK)
+    DISPLAYSURF.blit(text, (450,10))
  
     #Moves and Re-draws all Sprites
     for entity in all_sprites:
         DISPLAYSURF.blit(entity.image, entity.rect)
         entity.move()
 
-    # Player монетаны жинаса
-    collected = pygame.sprite.spritecollide(P1, coins, True)
-    if collected:
-        COINS_COLLECTED += len(collected)
-        new_coin = Coin()
-        coins.add(new_coin)
-        all_sprites.add(new_coin)
+
+    a = pygame.sprite.spritecollide(P1, coins, True)
+    if a:
+        coinss += len(a)
+        new = Coin()
+        coins.add(new)
+        all_sprites.add(new)
  
     #To be run if collision occurs between Player and Enemy
     if pygame.sprite.spritecollideany(P1, enemies):
