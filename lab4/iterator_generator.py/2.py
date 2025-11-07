@@ -6,3 +6,5 @@ def even(n):
 n=int(input())
 result=even(n)
 print(",".join(map(str,result)))
+
+

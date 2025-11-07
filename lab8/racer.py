@@ -2,45 +2,40 @@
 import pygame, sys
 from pygame.locals import *
 import random, time
- 
-#Initialzing 
+ #Initialzing 
 pygame.init()
- 
-#Setting up FPS 
+ #Setting up FPS 
 FPS = 60
 FramePerSec = pygame.time.Clock()
- 
-#Creating colors
+ #Creating colors
 BLUE  = (0, 0, 255)
 RED   = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
- 
-#Other Variables for use in the program
+ #Other Variables for use in the program
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
 SPEED = 5
 SCORE = 0
 coinss = 0  
- 
-#Setting up Fonts
+ #Setting up Fonts
 font = pygame.font.SysFont("Verdana", 60)
 font_small = pygame.font.SysFont("Verdana", 20)
 game_over = font.render("Game Over", True, BLACK)
  
-background = pygame.image.load("roadd.png")
+background = pygame.image.load(r"/Users/erkenazsagynbaeva/Downloads/PygameTutorial_3_0/AnimatedStreet.png")
 background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
  
-#Create a white screen 
-DISPLAYSURF = pygame.display.set_mode((600,800))
+ #Create a white screen 
+DISPLAYSURF = pygame.display.set_mode((400,600))
 DISPLAYSURF.fill(WHITE)
 pygame.display.set_caption("Game")
  
 class Enemy(pygame.sprite.Sprite):
       def __init__(self):
         super().__init__() 
-        self.image = pygame.image.load("pic1.png")
+        self.image = pygame.image.load(r"/Users/erkenazsagynbaeva/Downloads/PygameTutorial_3_0/Enemy.png")
         self.image = pygame.transform.scale(self.image, (90, 100))
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(40, SCREEN_WIDTH-40), 0)  
@@ -48,7 +43,7 @@ class Enemy(pygame.sprite.Sprite):
       def move(self):
         global SCORE
         self.rect.move_ip(0,SPEED)
-        if (self.rect.top > 800):
+        if (self.rect.top > 600):
             SCORE += 1
             self.rect.top = 0
             self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
@@ -56,7 +51,7 @@ class Enemy(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__() 
-        self.image = pygame.image.load("pic2.png")
+        self.image = pygame.image.load("/Users/erkenazsagynbaeva/Downloads/PygameTutorial_3_0/Player.png")
         self.image = pygame.transform.scale(self.image, (90, 100))
         self.rect = self.image.get_rect()
         self.rect.center = (160, 520)
@@ -78,7 +73,7 @@ class Player(pygame.sprite.Sprite):
 class Coin(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("coin.png")  
+        self.image = pygame.image.load(r"/Users/erkenazsagynbaeva/Downloads/PygameTutorial_3_0/Coin.png")  
         self.image = pygame.transform.scale(self.image, (40, 40))
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(40, SCREEN_WIDTH-40), 0)
@@ -125,7 +120,7 @@ while True:
     scores = font_small.render(str(SCORE), True, BLACK)
     DISPLAYSURF.blit(scores, (10,10))
     text = font_small.render("Coins: " + str(coinss), True, BLACK)
-    DISPLAYSURF.blit(text, (450,10))
+    DISPLAYSURF.blit(text, (300,10))
  
     #Moves and Re-draws all Sprites
     for entity in all_sprites:
@@ -142,7 +137,7 @@ while True:
  
     #To be run if collision occurs between Player and Enemy
     if pygame.sprite.spritecollideany(P1, enemies):
-          pygame.mixer.Sound('sound.mp3').play()
+          pygame.mixer.Sound(r'/Users/erkenazsagynbaeva/Downloads/PygameTutorial_3_0/crash.wav').play()
           time.sleep(0.5)
                     
           DISPLAYSURF.fill(RED)

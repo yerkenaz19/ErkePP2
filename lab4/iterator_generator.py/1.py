@@ -4,3 +4,5 @@ def squares(n):
 n=int(input())
 for num in squares(n):
     print (num)
+
+

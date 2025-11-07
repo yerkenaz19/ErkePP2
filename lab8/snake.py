@@ -1,11 +1,13 @@
 import pygame
 import random
+import sys
 
 pygame.init()
 
 w, h = 600, 400
 c = 20
 win = pygame.display.set_mode((w, h))
+pygame.display.set_caption("Snake Game")
 
 black = (0, 0, 0)
 green = (0, 255, 0)
@@ -26,6 +28,7 @@ while True:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
             pygame.quit()
+            sys.exit()
         if e.type == pygame.KEYDOWN:
             if e.key == pygame.K_UP and d != "DOWN": d = "UP"
             elif e.key == pygame.K_DOWN and d != "UP": d = "DOWN"
@@ -45,10 +48,13 @@ while True:
 
     if new == f:
         sc += 1
-        if sc % 3 == 0: lvl += 1; sp += 2
+        if sc % 3 == 0: 
+            lvl += 1
+            sp += 2
         while True:
             f = (random.randrange(0, w, c), random.randrange(0, h, c))
-            if f not in s: break
+            if f not in s: 
+                break
     else:
         s.pop()
 

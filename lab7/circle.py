@@ -18,13 +18,19 @@ while not done:
         
 
     keys=pygame.key.get_pressed()
-    if keys[pygame.K_RIGHT] and x<775:
+    if keys[pygame.K_RIGHT] and x<800:
         x += 20
+    if x==800:
+        x+=20
+        
+       
+
+        
     if keys[pygame.K_LEFT] and x>30: 
         x -= 20
     if keys[pygame.K_UP]and y>30: 
         y -= 20
-    if keys[pygame.K_DOWN] and y<575: 
+    if keys[pygame.K_DOWN] and y<560: 
         y += 20
 
     screen.fill(white)

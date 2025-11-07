@@ -48,14 +48,15 @@ def main():
                     tool = 'rectangle'  
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
+                if event.button == 1: # left click grows radius
                     radius = min(200, radius + 1)
-                elif event.button == 3:
+                elif event.button == 3: # right click shrinks radius
                     radius = max(1, radius - 1)
 
             if event.type == pygame.MOUSEMOTION:
+                # if mouse moved, add point to list
                 position = event.pos
-                points.append(position)
+                points = points + [position]
                 points = points[-256:]
                 
         screen.fill((0, 0, 0))
@@ -89,7 +90,7 @@ def drawLineBetween(screen, index, start, end, width, color_mode, tool):
     iterations = max(abs(dx), abs(dy))
     
     for i in range(iterations):
-        progress = i / iterations
+        progress = 1.0 * i / iterations
         aprogress = 1 - progress
         x = int(aprogress * start[0] + progress * end[0])
         y = int(aprogress * start[1] + progress * end[1])
