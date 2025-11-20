@@ -1,4 +1,3 @@
-#Imports
 import pygame, sys
 from pygame.locals import *
 import random, time
@@ -6,7 +5,7 @@ import random, time
 #Initialzing 
 pygame.init()
 
-#Setting up FPS 
+#FPS 
 FPS = 60
 FramePerSec = pygame.time.Clock()
 
@@ -21,12 +20,9 @@ SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
 SPEED = 5
 SCORE = 0
-coinss = 0     
-
-# Increase speed after N collected coins
-COIN_THRESHOLD = 10   
-
-#Setting up Fonts
+coinss = 0    #счетчик
+COIN_THRESHOLD = 5 #количество монет для увеличения скорости
+#Fonts
 font = pygame.font.SysFont("Verdana", 60)
 font_small = pygame.font.SysFont("Verdana", 20)
 game_over = font.render("Game Over", True, BLACK)
@@ -39,7 +35,6 @@ background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 DISPLAYSURF = pygame.display.set_mode((400,600))
 DISPLAYSURF.fill(WHITE)
 pygame.display.set_caption("Game")
-
 class Enemy(pygame.sprite.Sprite):
       def __init__(self):
         super().__init__() 
@@ -51,7 +46,6 @@ class Enemy(pygame.sprite.Sprite):
       def move(self):
         global SCORE
         self.rect.move_ip(0,SPEED)
-
         if (self.rect.top > 600):
             SCORE += 1
             self.rect.top = 0
@@ -77,22 +71,16 @@ class Player(pygame.sprite.Sprite):
 class Coin(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-
-        # Generate a random weight for the coin
-        self.value = random.choice([1, 2, 3, 5])   
-
+        self.value = random.choice([1, 2, 3, 5])   #вес монеты (1, 2, 3)
         self.image = pygame.image.load(r"/Users/erkenazsagynbaeva/Downloads/PygameTutorial_3_0/Coin.png")  
-
         # Scale coin size based on weight 
         size = 30 + self.value * 3
         self.image = pygame.transform.scale(self.image, (size, size))
-
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(40, SCREEN_WIDTH-40), 0)
         
     def move(self):
         self.rect.move_ip(0, SPEED)
-
         # Respawn when coin leaves screen
         if self.rect.top > SCREEN_HEIGHT:
             self.rect.top = 0
@@ -128,7 +116,6 @@ while True:
             sys.exit()
  
     DISPLAYSURF.blit(background, (0,0))
-
     # Show score and coin count
     scores = font_small.render(str(SCORE), True, BLACK)
     DISPLAYSURF.blit(scores, (10,10))
