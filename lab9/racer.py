@@ -2,36 +2,44 @@
 import pygame, sys
 from pygame.locals import *
 import random, time
- #Initialzing 
+
+#Initialzing 
 pygame.init()
- #Setting up FPS 
+
+#Setting up FPS 
 FPS = 60
 FramePerSec = pygame.time.Clock()
- #Creating colors
+
+#Creating colors
 BLUE  = (0, 0, 255)
 RED   = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
- #Other Variables for use in the program
+
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
 SPEED = 5
 SCORE = 0
-coinss = 0  
- #Setting up Fonts
+coinss = 0     
+
+# Increase speed after N collected coins
+COIN_THRESHOLD = 10   
+
+#Setting up Fonts
 font = pygame.font.SysFont("Verdana", 60)
 font_small = pygame.font.SysFont("Verdana", 20)
 game_over = font.render("Game Over", True, BLACK)
- 
+
+#Background image
 background = pygame.image.load(r"/Users/erkenazsagynbaeva/Downloads/PygameTutorial_3_0/AnimatedStreet.png")
 background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
- 
- #Create a white screen 
+
+#Create a white screen 
 DISPLAYSURF = pygame.display.set_mode((400,600))
 DISPLAYSURF.fill(WHITE)
 pygame.display.set_caption("Game")
- 
+
 class Enemy(pygame.sprite.Sprite):
       def __init__(self):
         super().__init__() 
@@ -39,15 +47,16 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (90, 100))
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(40, SCREEN_WIDTH-40), 0)  
- 
+
       def move(self):
         global SCORE
         self.rect.move_ip(0,SPEED)
+
         if (self.rect.top > 600):
             SCORE += 1
             self.rect.top = 0
             self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
- 
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__() 
@@ -58,11 +67,6 @@ class Player(pygame.sprite.Sprite):
         
     def move(self):
         pressed_keys = pygame.key.get_pressed()
-       #if pressed_keys[K_UP]:
-            #self.rect.move_ip(0, -5)
-       #if pressed_keys[K_DOWN]:
-            #self.rect.move_ip(0,5)
-         
         if self.rect.left > 0:
               if pressed_keys[K_LEFT]:
                   self.rect.move_ip(-5, 0)
@@ -73,13 +77,23 @@ class Player(pygame.sprite.Sprite):
 class Coin(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
+
+        # Generate a random weight for the coin
+        self.value = random.choice([1, 2, 3, 5])   
+
         self.image = pygame.image.load(r"/Users/erkenazsagynbaeva/Downloads/PygameTutorial_3_0/Coin.png")  
-        self.image = pygame.transform.scale(self.image, (40, 40))
+
+        # Scale coin size based on weight 
+        size = 30 + self.value * 3
+        self.image = pygame.transform.scale(self.image, (size, size))
+
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(40, SCREEN_WIDTH-40), 0)
         
     def move(self):
         self.rect.move_ip(0, SPEED)
+
+        # Respawn when coin leaves screen
         if self.rect.top > SCREEN_HEIGHT:
             self.rect.top = 0
             self.rect.center = (random.randint(40, SCREEN_WIDTH-40), 0)
@@ -100,42 +114,48 @@ all_sprites = pygame.sprite.Group()
 all_sprites.add(P1)
 all_sprites.add(E1)
 all_sprites.add(C1)
- 
+
 #Adding a new User event 
 INC_SPEED = pygame.USEREVENT + 1
 pygame.time.set_timer(INC_SPEED, 1000)
- 
-#Game Loop
-while True:
-       
-    #Cycles through all events occurring  
+
+while True: 
     for event in pygame.event.get():
         if event.type == INC_SPEED:
-              SPEED += 0.5     
+              SPEED += 0.5   
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
  
     DISPLAYSURF.blit(background, (0,0))
+
+    # Show score and coin count
     scores = font_small.render(str(SCORE), True, BLACK)
     DISPLAYSURF.blit(scores, (10,10))
+
     text = font_small.render("Coins: " + str(coinss), True, BLACK)
     DISPLAYSURF.blit(text, (300,10))
  
-    #Moves and Re-draws all Sprites
+    # Move and redraw all sprites
     for entity in all_sprites:
         DISPLAYSURF.blit(entity.image, entity.rect)
         entity.move()
 
-#монета алса ол қайда кетеді коды
     a = pygame.sprite.spritecollide(P1, coins, True)
     if a:
-        coinss += len(a)
+        # Add weighted coin values
+        for c in a:
+            coinss += c.value
+
+        # Spawn a new coin after collecting one
         new = Coin()
         coins.add(new)
         all_sprites.add(new)
+
+        # Increase enemy speed every N coins
+        if coinss % COIN_THRESHOLD == 0:
+            SPEED += 1
  
-    #To be run if collision occurs between Player and Enemy
     if pygame.sprite.spritecollideany(P1, enemies):
           pygame.mixer.Sound(r'/Users/erkenazsagynbaeva/Downloads/PygameTutorial_3_0/crash.wav').play()
           time.sleep(0.5)
@@ -144,8 +164,10 @@ while True:
           DISPLAYSURF.blit(game_over, (30,250))
            
           pygame.display.update()
+
           for entity in all_sprites:
                 entity.kill() 
+
           time.sleep(2)
           pygame.quit()
           sys.exit()        
